@@ -1,8 +1,12 @@
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 /// <summary>
 /// Practical 8: Gameplay Balance & Responsiveness Patch
 /// Implements Coyote Time and Jump Buffering based on User Testing Feedback to eliminate dropped edge jumps.
+/// Supports both New Input System and Legacy Input.
 /// </summary>
 public class GameplayBalancePatch : MonoBehaviour
 {
@@ -39,7 +43,19 @@ public class GameplayBalancePatch : MonoBehaviour
         }
 
         // 2. Jump Buffer logic: store jump intent if pressed just before landing
-        if (Input.GetButtonDown("Jump"))
+        bool jumpPressed = false;
+#if ENABLE_INPUT_SYSTEM
+        if (Keyboard.current != null)
+        {
+            jumpPressed = Keyboard.current.spaceKey.wasPressedThisFrame;
+        }
+        else
+#endif
+        {
+            jumpPressed = Input.GetButtonDown("Jump");
+        }
+
+        if (jumpPressed)
         {
             jumpBufferCounter = jumpBufferTime;
         }

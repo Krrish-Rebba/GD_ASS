@@ -5,10 +5,15 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 #endif
 
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
+
 /// <summary>
 /// Practical 7: AR/XR Object Placement Controller
 /// Raycasts against detected surfaces to place 3D game models in real/simulated space.
 /// Includes an in-editor simulation fallback for testing on PC without a mobile device.
+/// Supports both New Input System and Legacy Input.
 /// </summary>
 public class ARItemPlacementController : MonoBehaviour
 {
@@ -48,9 +53,25 @@ public class ARItemPlacementController : MonoBehaviour
 
     private void SimulateEditorPlacement()
     {
-        if (Input.GetMouseButtonDown(0))
+        bool clicked = false;
+        Vector2 screenPos = Vector2.zero;
+
+#if ENABLE_INPUT_SYSTEM
+        if (Mouse.current != null)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            clicked = Mouse.current.leftButton.wasPressedThisFrame;
+            screenPos = Mouse.current.position.ReadValue();
+        }
+        else
+#endif
+        {
+            clicked = Input.GetMouseButtonDown(0);
+            screenPos = Input.mousePosition;
+        }
+
+        if (clicked)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(screenPos);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 PlaceOrMoveObject(hit.point, Quaternion.identity);
@@ -61,15 +82,27 @@ public class ARItemPlacementController : MonoBehaviour
     private void HandleMobileARTouch()
     {
 #if UNITY_XR_ARFOUNDATION
+        bool touchBegan = false;
+        Vector2 touchPos = Vector2.zero;
+
+#if ENABLE_INPUT_SYSTEM
+        if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
+        {
+            touchBegan = true;
+            touchPos = Touchscreen.current.primaryTouch.position.ReadValue();
+        }
+        else
+#endif
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         {
-            Vector2 touchPos = Input.GetTouch(0).position;
+            touchBegan = true;
+            touchPos = Input.GetTouch(0).position;
+        }
 
-            if (raycastManager != null && raycastManager.Raycast(touchPos, hits, TrackableType.PlaneWithinPolygon))
-            {
-                Pose hitPose = hits[0].pose;
-                PlaceOrMoveObject(hitPose.position, hitPose.rotation);
-            }
+        if (touchBegan && raycastManager != null && raycastManager.Raycast(touchPos, hits, TrackableType.PlaneWithinPolygon))
+        {
+            Pose hitPose = hits[0].pose;
+            PlaceOrMoveObject(hitPose.position, hitPose.rotation);
         }
 #endif
     }

@@ -1,9 +1,13 @@
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 /// <summary>
 /// Practical 4: Physics Motion & Force Controller
 /// Demonstrates Rigidbody force/impulse application and collision response.
 /// Works in 2D or 3D (3D Rigidbody version).
+/// Supports both New Input System and Legacy Input.
 /// </summary>
 [RequireComponent(typeof(Rigidbody))]
 public class BouncingBallPhysics : MonoBehaviour
@@ -21,6 +25,8 @@ public class BouncingBallPhysics : MonoBehaviour
 
     private Rigidbody rb;
     private int bounceCount = 0;
+    private float moveX = 0f;
+    private float moveZ = 0f;
 
     public int BounceCount => bounceCount;
     public float CurrentSpeed => rb != null ? rb.linearVelocity.magnitude : 0f;
@@ -38,28 +44,47 @@ public class BouncingBallPhysics : MonoBehaviour
 
     private void Update()
     {
-        // Spacebar applies an immediate vertical impulse force
-        if (Input.GetKeyDown(KeyCode.Space))
+#if ENABLE_INPUT_SYSTEM
+        if (Keyboard.current != null)
         {
-            ApplyImpulse(Vector3.up * launchForce);
-        }
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            {
+                ApplyImpulse(Vector3.up * launchForce);
+            }
+            if (Keyboard.current.rKey.wasPressedThisFrame)
+            {
+                ResetBall();
+            }
 
-        // R key resets the ball position and relaunches
-        if (Input.GetKeyDown(KeyCode.R))
+            moveX = 0f;
+            moveZ = 0f;
+            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) moveX -= 1f;
+            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) moveX += 1f;
+            if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) moveZ += 1f;
+            if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) moveZ -= 1f;
+        }
+        else
+#endif
         {
-            ResetBall();
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ApplyImpulse(Vector3.up * launchForce);
+            }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                ResetBall();
+            }
+            moveX = Input.GetAxis("Horizontal");
+            moveZ = Input.GetAxis("Vertical");
         }
     }
 
     private void FixedUpdate()
     {
         // Directional nudging using ForceMode.Force (continuous acceleration)
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
-
         if (Mathf.Abs(moveX) > 0.05f || Mathf.Abs(moveZ) > 0.05f)
         {
-            Vector3 nudge = new Vector3(moveX, 0f, moveZ) * nudgeForce;
+            Vector3 nudge = new Vector3(moveX, 0f, moveZ).normalized * nudgeForce;
             rb.AddForce(nudge, ForceMode.Force);
         }
     }
