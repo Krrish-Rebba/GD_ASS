@@ -1,8 +1,12 @@
 using UnityEngine;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 /// <summary>
 /// Practical 3: 2D Platformer Player Controller
 /// Handles horizontal movement, jumping, and ground collision detection using Unity's Rigidbody2D.
+/// Supports both the New Input System and Legacy Input.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
@@ -42,13 +46,28 @@ public class PlayerMovement2D : MonoBehaviour
 
     private void Update()
     {
-        // 1. Read input in Update (runs every rendered frame for crisp response)
-        horizontalInput = Input.GetAxisRaw("Horizontal"); // Returns -1 (A/Left), 0, or 1 (D/Right)
-
-        // 2. Check if the Jump key (Spacebar) was pressed down
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        // 1. Read input (compatible with both New Input System and Legacy Input)
+#if ENABLE_INPUT_SYSTEM
+        if (Keyboard.current != null)
         {
-            jumpRequested = true;
+            float inputX = 0f;
+            if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) inputX -= 1f;
+            if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) inputX += 1f;
+            horizontalInput = inputX;
+
+            if (Keyboard.current.spaceKey.wasPressedThisFrame && isGrounded)
+            {
+                jumpRequested = true;
+            }
+        }
+        else
+#endif
+        {
+            horizontalInput = Input.GetAxisRaw("Horizontal");
+            if (Input.GetButtonDown("Jump") && isGrounded)
+            {
+                jumpRequested = true;
+            }
         }
 
         // 3. Optional: Flip sprite facing direction
