@@ -53,7 +53,7 @@ public class GameplayBalancePatch : MonoBehaviour
         {
             if (rb != null)
             {
-                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
                 Debug.Log("[Iteration 8 Applied] Buffered jump executed successfully via Coyote Time grace window!");
             }
             jumpBufferCounter = 0f;

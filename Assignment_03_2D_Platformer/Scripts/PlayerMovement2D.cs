@@ -78,12 +78,12 @@ public class PlayerMovement2D : MonoBehaviour
         }
 
         // 2. Apply horizontal velocity while preserving current vertical velocity (gravity/falling)
-        rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
 
         // 3. Apply jump impulse if requested
         if (jumpRequested)
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             jumpRequested = false;
         }
     }

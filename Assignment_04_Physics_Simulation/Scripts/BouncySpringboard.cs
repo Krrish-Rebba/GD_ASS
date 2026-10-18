@@ -33,7 +33,7 @@ public class BouncySpringboard : MonoBehaviour
             if (collision.relativeVelocity.y <= 0f)
             {
                 // Reset vertical velocity first to ensure consistent launch height
-                rb.velocity = new Vector2(rb.velocity.x, 0f);
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
 
                 // Apply instant upward impulse
                 rb.AddForce(Vector2.up * bounceImpulse, ForceMode2D.Impulse);

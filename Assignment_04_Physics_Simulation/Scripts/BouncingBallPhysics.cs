@@ -23,7 +23,7 @@ public class BouncingBallPhysics : MonoBehaviour
     private int bounceCount = 0;
 
     public int BounceCount => bounceCount;
-    public float CurrentSpeed => rb != null ? rb.velocity.magnitude : 0f;
+    public float CurrentSpeed => rb != null ? rb.linearVelocity.magnitude : 0f;
 
     private void Awake()
     {
@@ -68,13 +68,13 @@ public class BouncingBallPhysics : MonoBehaviour
     {
         // AddForce with ForceMode.Impulse applies an instant momentum change (ideal for hits/bounces)
         rb.AddForce(forceVector, ForceMode.Impulse);
-        Debug.Log($"[Physics Practical 4] Applied Impulse: {forceVector}. Current Velocity: {rb.velocity}");
+        Debug.Log($"[Physics Practical 4] Applied Impulse: {forceVector}. Current Velocity: {rb.linearVelocity}");
     }
 
     public void ResetBall()
     {
         transform.position = new Vector3(0f, 5f, 0f);
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         bounceCount = 0;
         LaunchRandom();

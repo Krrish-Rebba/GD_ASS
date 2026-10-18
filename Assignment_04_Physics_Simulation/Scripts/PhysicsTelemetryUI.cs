@@ -15,9 +15,9 @@ public class PhysicsTelemetryUI : MonoBehaviour
         if (telemetryText != null && targetRigidbody != null)
         {
             telemetryText.text = $"=== LIVE PHYSICS TELEMETRY ===\n" +
-                                 $"Velocity X: {targetRigidbody.velocity.x:F2} m/s\n" +
-                                 $"Velocity Y: {targetRigidbody.velocity.y:F2} m/s\n" +
-                                 $"Net Speed:  {targetRigidbody.velocity.magnitude:F2} m/s\n" +
+                                 $"Velocity X: {targetRigidbody.linearVelocity.x:F2} m/s\n" +
+                                 $"Velocity Y: {targetRigidbody.linearVelocity.y:F2} m/s\n" +
+                                 $"Net Speed:  {targetRigidbody.linearVelocity.magnitude:F2} m/s\n" +
                                  $"Mass:       {targetRigidbody.mass} kg\n" +
                                  $"Gravity Scale: {targetRigidbody.gravityScale}\n" +
                                  $"Collision:  {targetRigidbody.collisionDetectionMode}";
