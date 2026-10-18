@@ -35,7 +35,7 @@ A classic 2D side-scrolling platformer game where:
 2. Select the `Tilemap` child object in Hierarchy:
    - In the **Inspector** on the right, click **Add Component** and add **Tilemap Collider 2D**.
    - Also add a **Composite Collider 2D** (this automatically adds a `Rigidbody2D` — change its **Body Type** to `Static`).
-   - On the `Tilemap Collider 2D`, check the box **Used By Composite**.
+   - On the `Tilemap Collider 2D`, find **Composite Operation** and change it from `None` to **`Merge`** (this is the Unity 6 replacement for the older "Used By Composite" checkbox).
 3. Create platforms:
    - Go to top menu: **Window** -> **2D** -> **Tile Palette**.
    - Click **Create New Palette** -> name it `LevelTiles` -> save it in `Assets`.
