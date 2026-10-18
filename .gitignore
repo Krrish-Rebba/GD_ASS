@@ -1,0 +1,28 @@
+# Standard Unity .gitignore for ETCS406 Game Development Assignments
+
+# Unity generated folders
+/[Aa]ssignment_*/[Ll]ibrary/
+/[Aa]ssignment_*/[Tt]emp/
+/[Aa]ssignment_*/[Oo]bj/
+/[Aa]ssignment_*/[Bb]uild/
+/[Aa]ssignment_*/[Bb]uilds/
+/[Aa]ssignment_*/[Ll]ogs/
+/[Aa]ssignment_*/[Uu]ser[Ss]ettings/
+/[Aa]ssignment_*/[Mm]emoryCaptures/
+
+# Visual Studio / VS Code generated files
+/[Aa]ssignment_*/*.csproj
+/[Aa]ssignment_*/*.unityproj
+/[Aa]ssignment_*/*.sln
+/[Aa]ssignment_*/*.suo
+/[Aa]ssignment_*/*.user
+/[Aa]ssignment_*/*.userprefs
+/[Aa]ssignment_*/*.pidb
+/[Aa]ssignment_*/*.booproj
+/[Aa]ssignment_*/.vs/
+/[Aa]ssignment_*/.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
